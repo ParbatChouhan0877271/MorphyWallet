@@ -1,0 +1,46 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Product Catalogue";
+}
+
+<div class="container mt-4">
+    <h2>Wallet Plans Catalogue</h2>
+    <p>Explore our wallet subscription options for your financial needs as per Indian user</p>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Plan ID</th>
+                <th>Plan Name</th>
+                <th>Starting Balance (₹)</th>
+                <th>Monthly Limit (₹)</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Created Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.PlanId</td>
+                    <td>@item.PlanName</td>
+                    <td>@item.Balance</td>
+                    <td>@item.Limit</td>
+                    <td>@item.Description</td>
+                    <td>
+                        @if (item.IsActive)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Inactive</span>
+                        }
+                    </td>
+                    <td>@item.Created.ToString("yyyy-MM-dd")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
