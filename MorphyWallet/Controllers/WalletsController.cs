@@ -160,5 +160,59 @@ namespace MorphyWallet.Controllers
         {
             return _context.Wallets.Any(e => e.Id == id);
         }
+        public IActionResult Catalogue()
+        {
+            var demoWallets = new List<dynamic>
+    {
+        new {
+            PlanId = 1,
+            PlanName = "Starter",
+            Balance = 100,
+            Limit = 1000,
+            Description = "Entry-level wallet plan",
+            IsActive = true,
+            Created = DateTime.UtcNow.AddDays(-10)
+        },
+        new {
+            PlanId = 2,
+            PlanName = "Basic",
+            Balance = 250,
+            Limit = 2000,
+            Description = "Basic monthly wallet",
+            IsActive = true,
+            Created = DateTime.UtcNow.AddDays(-20)
+        },
+        new {
+            PlanId = 3,
+            PlanName = "Standard",
+            Balance = 500,
+            Limit = 5000,
+            Description = "Standard user plan",
+            IsActive = true,
+            Created = DateTime.UtcNow.AddDays(-30)
+        },
+        new {
+            PlanId = 4,
+            PlanName = "Premium",
+            Balance = 750,
+            Limit = 10000,
+            Description = "Premium user wallet",
+            IsActive = false,
+            Created = DateTime.UtcNow.AddDays(-40)
+        },
+        new {
+            PlanId = 5,
+            PlanName = "Enterprise",
+            Balance = 1000,
+            Limit = 25000,
+            Description = "For business users",
+            IsActive = true,
+            Created = DateTime.UtcNow.AddDays(-50)
+        }
+    };
+
+            return View(demoWallets);
+        }
+
     }
 }
