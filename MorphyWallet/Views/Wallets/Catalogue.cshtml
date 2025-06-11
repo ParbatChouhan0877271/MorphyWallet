@@ -1,46 +1,64 @@
-﻿@model IEnumerable<dynamic>
+﻿@model IEnumerable<MorphyWallet.Models.Wallet>
+
 @{
     ViewData["Title"] = "Product Catalogue";
 }
 
-<div class="container mt-4">
-    <h2>Wallet Plans Catalogue</h2>
-    <p>Explore our wallet subscription options for your financial needs as per Indian user</p>
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-primary">💼 Wallet Plans Catalogue</h2>
+        <p class="text-muted">Explore subscription options for Indian financial users</p>
+        <a asp-action="Create" class="btn btn-success btn-lg mt-3">+ Add New Plan</a>
+    </div>
 
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>Plan ID</th>
-                <th>Plan Name</th>
-                <th>Starting Balance (₹)</th>
-                <th>Monthly Limit (₹)</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Created Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.PlanId</td>
-                    <td>@item.PlanName</td>
-                    <td>@item.Balance</td>
-                    <td>@item.Limit</td>
-                    <td>@item.Description</td>
-                    <td>
-                        @if (item.IsActive)
-                        {
-                            <span class="badge bg-success">Active</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger">Inactive</span>
-                        }
-                    </td>
-                    <td>@item.Created.ToString("yyyy-MM-dd")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle shadow-sm">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th>Plan Name</th>
+                        <th>Balance (₹)</th>
+                        <th>Limit (₹)</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Created Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="text-center">
+                            <td class="fw-semibold">@item.PlanName</td>
+                            <td>₹@item.Balance.ToString("N2")</td>
+                            <td>₹@item.Limit.ToString("N2")</td>
+                            <td>@item.Description</td>
+                            <td>
+                                @if (item.IsActive)
+                                {
+                                    <span class="badge bg-success px-3 py-2">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary px-3 py-2">Inactive</span>
+                                }
+                            </td>
+                            <td>@item.CreatedAt.ToString("dd MMM yyyy")</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-2">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center mt-4" role="alert">
+            No wallet plans available. Click "Add New Plan" to create one.
+        </div>
+    }
 </div>

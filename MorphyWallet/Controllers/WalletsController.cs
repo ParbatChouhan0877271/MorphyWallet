@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,25 +22,22 @@ namespace MorphyWallet.Controllers
         // GET: Wallets
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Wallets.Include(w => w.User);
-            return View(await applicationDbContext.ToListAsync());
+            var wallets = _context.Wallets.Include(w => w.User);
+            return View(await wallets.ToListAsync());
         }
 
         // GET: Wallets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var wallet = await _context.Wallets
                 .Include(w => w.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (wallet == null)
-            {
                 return NotFound();
-            }
 
             return View(wallet);
         }
@@ -53,50 +50,46 @@ namespace MorphyWallet.Controllers
         }
 
         // POST: Wallets/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,Balance")] Wallet wallet)
+        public async Task<IActionResult> Create([Bind("Id,UserId,PlanName,Balance,Limit,Description,IsActive")] Wallet wallet)
         {
             if (ModelState.IsValid)
             {
+                wallet.CreatedAt = DateTime.UtcNow;
                 _context.Add(wallet);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Catalogue));
             }
+
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", wallet.UserId);
             return View(wallet);
         }
 
         // GET: Wallets/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var wallet = await _context.Wallets.FindAsync(id);
             if (wallet == null)
-            {
                 return NotFound();
-            }
+
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", wallet.UserId);
             return View(wallet);
         }
 
         // POST: Wallets/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,Balance")] Wallet wallet)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,PlanName,Balance,Limit,Description,IsActive")] Wallet wallet)
         {
             if (id != wallet.Id)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -108,40 +101,36 @@ namespace MorphyWallet.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!WalletExists(wallet.Id))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Catalogue));
             }
+
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", wallet.UserId);
             return View(wallet);
         }
 
         // GET: Wallets/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var wallet = await _context.Wallets
                 .Include(w => w.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (wallet == null)
-            {
                 return NotFound();
-            }
 
             return View(wallet);
         }
 
         // POST: Wallets/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -150,69 +139,27 @@ namespace MorphyWallet.Controllers
             if (wallet != null)
             {
                 _context.Wallets.Remove(wallet);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Catalogue));
         }
 
         private bool WalletExists(int id)
         {
             return _context.Wallets.Any(e => e.Id == id);
         }
-        public IActionResult Catalogue()
+
+        // GET: Wallets/Catalogue
+        public async Task<IActionResult> Catalogue()
         {
-            var demoWallets = new List<dynamic>
-    {
-        new {
-            PlanId = 1,
-            PlanName = "Starter",
-            Balance = 100,
-            Limit = 1000,
-            Description = "Entry-level wallet plan",
-            IsActive = true,
-            Created = DateTime.UtcNow.AddDays(-10)
-        },
-        new {
-            PlanId = 2,
-            PlanName = "Basic",
-            Balance = 250,
-            Limit = 2000,
-            Description = "Basic monthly wallet",
-            IsActive = true,
-            Created = DateTime.UtcNow.AddDays(-20)
-        },
-        new {
-            PlanId = 3,
-            PlanName = "Standard",
-            Balance = 500,
-            Limit = 5000,
-            Description = "Standard user plan",
-            IsActive = true,
-            Created = DateTime.UtcNow.AddDays(-30)
-        },
-        new {
-            PlanId = 4,
-            PlanName = "Premium",
-            Balance = 750,
-            Limit = 10000,
-            Description = "Premium user wallet",
-            IsActive = false,
-            Created = DateTime.UtcNow.AddDays(-40)
-        },
-        new {
-            PlanId = 5,
-            PlanName = "Enterprise",
-            Balance = 1000,
-            Limit = 25000,
-            Description = "For business users",
-            IsActive = true,
-            Created = DateTime.UtcNow.AddDays(-50)
-        }
-    };
+            var catalogueWallets = await _context.Wallets
+                .Include(w => w.User)
+                .Where(w => !string.IsNullOrEmpty(w.PlanName))
+                .OrderByDescending(w => w.CreatedAt)
+                .ToListAsync();
 
-            return View(demoWallets);
+            return View(catalogueWallets);
         }
-
     }
 }

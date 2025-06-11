@@ -4,25 +4,16 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:10284",
+      "applicationUrl": "https://localhost:44390",
       "sslPort": 44390
     }
   },
   "profiles": {
-    "http": {
+    "MorphyWallet": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5246",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "https": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "applicationUrl": "https://localhost:7266;http://localhost:5246",
+      "applicationUrl": "https://localhost:7266",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
