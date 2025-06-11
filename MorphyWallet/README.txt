@@ -97,3 +97,9 @@ Roles added
 
 
 
+
+Development (DEV) https://morphywallet-dev-dcd3gsb9f5fhg7d0.canadacentral-01.azurewebsites.net/
+Test (TEST)  https://morphywallet-test-a3hmamb0eab0hkcg.canadacentral-01.azurewebsites.net 
+Production (PROD) https://morphywallet20250610112352-cnhdewhcb3fvftap.canadacentral-01.azurewebsites.net/
+
+Github https://github.com/ParbatChouhan0877271/MorphyWallet
