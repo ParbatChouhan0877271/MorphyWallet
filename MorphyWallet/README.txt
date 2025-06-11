@@ -81,3 +81,19 @@ Add th README.md file in github
 
 1243
 Ready to Submit.....
+
+2025-06-10
+2110
+Role-based Access added in areas
+Admin: Full CRUD access to wallet plans and user data.
+Guest`: Read-only access to wallet catalogue and limited views.
+
+Roles added 
+
+| Role  | Email              | Password   | Access Level      |
+|-------|--------------------|------------|-------------------|
+| Admin | admin@morphy.com   | Admin@123  | Full CRUD Access  |
+| Guest | guest@morphy.com   | Guest@123  | Read-Only Access  |
+
+
+

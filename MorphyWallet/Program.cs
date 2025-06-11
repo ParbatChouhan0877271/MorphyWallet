@@ -31,6 +31,11 @@ public class Program
             var services = scope.ServiceProvider;
             await AuthSeedData.InitializeAsync(services); // 👈 Seed admin and guest users
         }
+        using (var scope = app.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            db.Database.Migrate();
+        }
 
         if (!app.Environment.IsDevelopment())
         {
